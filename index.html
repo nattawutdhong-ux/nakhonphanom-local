@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NakhonPhanom Local</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=Noto+Sans+Lao:wght@400;600&family=Thasadith:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+:root{--gold:#A28830;--bur:#92224F;--pink:#FBCCBF;--blue:#8FD8F8;--cream:#E8E1CB;--ink:#231F20;--mut:#5C5030;--line:#CFC6A6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--bur);font:400 14px/1.5 'Noto Sans Thai','Noto Sans Lao',sans-serif;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+#app{max-width:480px;margin:0 auto;padding:0 20px 32px}
+.strip{display:flex;height:6px;margin:0 -20px 14px}.strip i{flex:1}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--bur);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.brand{font:400 28px/1 'Bebas Neue',sans-serif;letter-spacing:.5px}
+.langs{display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.langs button{width:44px;height:44px;border:0;background:none;color:var(--bur);font-weight:600}
+.langs .on{background:var(--bur);color:#fff}
+.me{margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;font-weight:600}
+.btn{height:44px;padding:0 16px;border:0;border-radius:12px;background:var(--bur);color:#fff;font-weight:700}
+h2{font:700 26px/1.1 'Thasadith','Noto Sans Thai',sans-serif;margin:8px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px}
+.t{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;color:var(--bur);font-size:12px;font-weight:600;text-align:center}
+.fr{position:relative;width:52px;height:52px}
+.fm{position:absolute;inset:0;width:52px;height:52px;fill:var(--gold)}
+.ic{position:absolute;left:12px;top:12px;width:28px;height:28px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.card b{font-size:16px}.mut{color:var(--mut);font-size:12px}
+.badge{background:var(--pink);color:var(--bur);font-weight:700;font-size:12px;padding:2px 8px;border-radius:8px;margin-left:6px}
+.row{display:flex;justify-content:space-between;gap:8px;margin-top:6px}
+.note{background:var(--blue);color:var(--ink);border-radius:14px;padding:12px 14px;margin:12px 0}
+.link{background:none;border:0;color:var(--bur);text-decoration:underline;min-height:44px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CONFIG={LIFF_ID:'2012500542-i4u4YU9r',SUPABASE_URL:'',SUPABASE_ANON_KEY:''};
+const CATS=[["cafe", "คาเฟ่", "Cafés", "ຮ້ານກາເຟ"], ["landmark", "แลนด์มาร์ค", "Landmarks", "ສະຖານທີ່ສຳຄັນ"], ["stay", "ที่พัก", "Stays", "ທີ່ພັກ"], ["transport", "รถโดยสาร / รับจ้าง", "Transport", "ລົດໂດຍສານ / ຮັບຈ້າງ"], ["toilet", "ห้องน้ำสาธารณะ", "Public toilets", "ຫ້ອງນ້ຳສາທາລະນະ"], ["food", "ร้านอาหาร", "Restaurants", "ຮ້ານອາຫານ"], ["tradition", "ประเพณีประจำปี", "Annual festivals", "ງານບຸນປະເພນີ"], ["events", "กิจกรรม / คอนเสิร์ต", "Events & concerts", "ກິດຈະກຳ / ຄອນເສີດ"], ["bar", "ร้านเหล้า", "Bars", "ຮ້ານເຫຼົ້າ"], ["atm", "ATM / ธนาคาร", "ATMs & banks", "ຕູ້ ATM / ທະນາຄານ"], ["border", "ข้ามแดน สปป.ลาว", "Crossing to Laos", "ຂ້າມແດນ ສປປ ລາວ"], ["rental", "เช่ารถ / ปั๊ม / EV", "Rentals, fuel & EV", "ເຊົ່າລົດ / ປ໊ມນ້ຳມັນ / EV"], ["souvenir", "ของฝาก / ตลาด", "Souvenirs & markets", "ຂອງຝາກ / ຕະຫຼາດ"], ["emergency", "ฉุกเฉิน", "Emergency", "ສຸກເສີນ"], ["other", "อื่นๆ", "Other", "ອື່ນໆ"]];
+const ICONS=["<path d=\"M5 8h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8zM16 9h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2\"/>", "<path d=\"M12 21s6-5.2 6-10a6 6 0 0 0-12 0c0 4.8 6 10 6 10z\"/><circle cx=\"12\" cy=\"11\" r=\"2\"/>", "<path d=\"M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5\"/>", "<rect x=\"4\" y=\"4\" width=\"16\" height=\"13\" rx=\"2\"/><path d=\"M4 11h16M7 20v-3M17 20v-3\"/>", "<circle cx=\"8\" cy=\"5\" r=\"1.5\"/><circle cx=\"16\" cy=\"5\" r=\"1.5\"/><path d=\"M8 8v11M5 12l3-4 3 4M16 8v11M13 12h6\"/>", "<path d=\"M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2.5 5-2.5 8H17v10\"/>", "<path d=\"M12 3l2.6 5.6 6 .7-4.4 4.1 1.2 6L12 16.5 6.6 19.4l1.2-6L3.4 9.3l6-.7z\"/>", "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M4 10h16M8 3v4M16 3v4\"/>", "<path d=\"M6 4h12l-6 8-6-8zM12 12v8M8 20h8\"/>", "<rect x=\"3\" y=\"6\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M3 10h18M7 15h4\"/>", "<path d=\"M3 17h18M5 17c0-5 3-8 7-8s7 3 7 8M8 17v-5M12 17V9M16 17v-5\"/>", "<path d=\"M5 16v-4l2-5h10l2 5v4M3 16h18\"/><circle cx=\"8\" cy=\"17.5\" r=\"1.5\"/><circle cx=\"16\" cy=\"17.5\" r=\"1.5\"/>", "<path d=\"M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2\"/>", "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 8v8M8 12h8\"/>", "<circle cx=\"6\" cy=\"12\" r=\"1\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"18\" cy=\"12\" r=\"1\"/>"];
+const FRAME="M11 2H17a7 7 0 0 0 14 0H37a9 9 0 0 1 9 9V17a7 7 0 0 0 0 14V37a9 9 0 0 1-9 9H31a7 7 0 0 0-14 0H11a9 9 0 0 1-9-9V31a7 7 0 0 0 0-14V11a9 9 0 0 1 9-9z";
+const T={
+th:{hello:'สวัสดี',cats:'หมวดหมู่',back:'กลับ',login:'เข้าสู่ระบบด้วย LINE',none:'ยังไม่มีข้อมูลในหมวดนี้',from:'เริ่มต้น',rev:'รีวิว',promo:'โปรโมต',err:'เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง',noDb:'ยังไม่ได้เชื่อมต่อฐานข้อมูล',credit:'เครดิตการออกแบบ',creditTxt:'ธีมอ้างอิงอัตลักษณ์จังหวัดนครพนม Client: กรมการพัฒนาชุมชน (พช.) / จังหวัดนครพนม · Concept & Design by Twodoors Studio · Font Development by Craftsmanship'},
+en:{hello:'Hello',cats:'Categories',back:'Back',login:'Log in with LINE',none:'No listings in this category yet',from:'From',rev:'reviews',promo:'Promoted',err:'Login failed. Please try again',noDb:'Database not connected yet',credit:'Design credits',creditTxt:'Theme based on the Nakhon Phanom identity. Client: Community Development Department / Nakhon Phanom Province · Concept & Design by Twodoors Studio · Font Development by Craftsmanship'},
+lo:{hello:'ສະບາຍດີ',cats:'ໝວດໝູ່',back:'ກັບຄືນ',login:'ເຂົ້າສູ່ລະບົບດ້ວຍ LINE',none:'ຍັງບໍ່ມີຂໍ້ມູນໃນໝວດນີ້',from:'ເລີ່ມຕົ້ນ',rev:'ຣີວິວ',promo:'ໂປຣໂມດ',err:'ເຂົ້າສູ່ລະບົບບໍ່ສຳເລັດ ກະລຸນາລອງໃໝ່',noDb:'ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ຖານຂໍ້ມູນ',credit:'ເຄຣດິດການອອກແບບ',creditTxt:'ທີມອ້າງອີງອັດຕະລັກຈັງຫວັດນະຄອນພະນົມ Client: ກົມພັດທະນາຊຸມຊົນ (ພຊ.) / ຈັງຫວັດນະຄອນພະນົມ · Concept & Design by Twodoors Studio · Font Development by Craftsmanship'}
+};
+let lang=localStorage.getItem('lang')||'th', user=null, view='home', cat=null, places=[], msg='', showCredit=false;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const L=()=>T[lang];
+const catName=c=>c[{th:1,en:2,lo:3}[lang]];
+function render(){
+  const t=L(), app=document.getElementById('app');
+  let h='<div class="strip"><i style="background:#4D72B8"></i><i style="background:#BD3B96"></i><i style="background:#A28830"></i><i style="background:#92224F"></i><i style="background:#DC4F3A"></i></div>';
+  h+='<div class="top"><div class="brand">NakhonPhanom Local</div><div class="langs">'+['th','en','lo'].map(k=>'<button data-lang="'+k+'" class="'+(k===lang?'on':'')+'">'+{th:'ไทย',en:'EN',lo:'ລາວ'}[k]+'</button>').join('')+'</div></div>';
+  h+='<div class="me">'+(user?'<span>'+esc(t.hello)+' '+esc(user.name||'')+'</span>':'<button class="btn" data-act="login">'+esc(t.login)+'</button>')+'</div>';
+  if(msg) h+='<div class="note">'+esc(msg)+'</div>';
+  if(view==='home'){
+    h+='<h2>'+esc(t.cats)+'</h2><div class="grid">'+CATS.map((c,i)=>'<button class="t" data-cat="'+c[0]+'"><span class="fr"><svg class="fm" viewBox="0 0 48 48" aria-hidden="true"><path d="'+FRAME+'"/></svg><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+ICONS[i]+'</svg></span>'+esc(catName(c))+'</button>').join('')+'</div>';
+  } else {
+    const c=CATS.find(x=>x[0]===cat);
+    h+='<h2><button class="link" data-act="back" aria-label="'+esc(t.back)+'">&larr;</button> '+esc(catName(c))+'</h2>';
+    if(!CONFIG.SUPABASE_URL) h+='<div class="note">'+esc(t.noDb)+'</div>';
+    else if(!places.length) h+='<div class="note">'+esc(t.none)+'</div>';
+    h+=places.map(p=>{const n=p['name_'+lang]||p.name_th;return '<div class="card"><b>'+esc(n)+'</b>'+(p.promo_active?'<span class="badge">'+esc(t.promo)+'</span>':'')+'<div class="mut">'+esc(p.address)+'</div><div class="row"><span>'+(p.review_count?'★ '+esc(p.rating)+' ('+esc(p.review_count)+' '+esc(t.rev)+')':'')+'</span><b>'+(p.price_from!=null?esc(t.from)+' ฿'+esc(p.price_from)+' '+esc(p.price_unit||''):'')+'</b></div></div>'}).join('');
+  }
+  h+='<button class="link" data-act="credit">'+esc(t.credit)+'</button>'+(showCredit?'<div class="note">'+esc(t.creditTxt)+'</div>':'');
+  app.innerHTML=h;
+}
+async function loadPlaces(id){
+  if(!CONFIG.SUPABASE_URL) return [];
+  const u=CONFIG.SUPABASE_URL+'/rest/v1/places_public?category_id=eq.'+encodeURIComponent(id)+'&order=promo_active.desc,rating.desc.nullslast&select=*';
+  const r=await fetch(u,{headers:{apikey:CONFIG.SUPABASE_ANON_KEY,Authorization:'Bearer '+CONFIG.SUPABASE_ANON_KEY}});
+  return r.ok?r.json():[];
+}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.lang){lang=b.dataset.lang;localStorage.setItem('lang',lang);document.documentElement.lang=lang;render();}
+  else if(b.dataset.cat){cat=b.dataset.cat;view='list';places=[];render();places=await loadPlaces(cat);render();}
+  else if(b.dataset.act==='back'){view='home';render();}
+  else if(b.dataset.act==='credit'){showCredit=!showCredit;render();}
+  else if(b.dataset.act==='login'){liff.login();}
+});
+async function boot(){
+  document.documentElement.lang=lang; render();
+  try{
+    await liff.init({liffId:CONFIG.LIFF_ID});
+    if(liff.isLoggedIn()){
+      const r=await fetch('/api/me',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:liff.getIDToken()})});
+      if(!r.ok) throw new Error('me '+r.status);
+      user=await r.json(); user.name=(await liff.getProfile()).displayName;
+    }
+  }catch(err){console.error(err);msg=L().err;}
+  render();
+}
+boot();
+</script>
+</body>
+</html>
